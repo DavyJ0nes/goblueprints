@@ -3,9 +3,11 @@ package main
 import (
 	"flag"
 	"fmt"
+	"goblueprints/trace"
 	"html/template"
 	"log"
 	"net/http"
+	"os"
 	"path/filepath"
 	"sync"
 )
@@ -27,6 +29,7 @@ func (t *templateHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	var port = flag.String("port", "8080", "The port of the application")
+	var debug = flag.Bool("debug", false, "Enable tracer")
 	flag.Parse()
 
 	// create default route handler that displays some static html
@@ -34,6 +37,9 @@ func main() {
 
 	// room router
 	r := newRoom()
+	if *debug {
+		r.tracer = trace.New(os.Stdout)
+	}
 	http.Handle("/room", r)
 	// running in new go routine to not block main thread
 	// which is used for running the http server
