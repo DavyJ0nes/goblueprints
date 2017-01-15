@@ -1,6 +1,8 @@
 package main
 
 import (
+	"flag"
+	"fmt"
 	"html/template"
 	"log"
 	"net/http"
@@ -20,10 +22,13 @@ func (t *templateHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	t.once.Do(func() {
 		t.tmpl = template.Must(template.ParseFiles(filepath.Join("templates", t.filename)))
 	})
-	t.tmpl.Execute(w, nil)
+	t.tmpl.Execute(w, r)
 }
 
 func main() {
+	var port = flag.String("port", "8080", "The port of the application")
+	flag.Parse()
+
 	// create default route handler that displays some static html
 	http.Handle("/", &templateHandler{filename: "chat.html"})
 
@@ -34,8 +39,10 @@ func main() {
 	// which is used for running the http server
 	go r.run()
 
+	addr := fmt.Sprintf(":%s", *port)
 	// Start Web Server
-	if err := http.ListenAndServe(":8080", nil); err != nil {
+	log.Println("Starting Web Server on port:", *port)
+	if err := http.ListenAndServe(addr, nil); err != nil {
 		log.Fatal("ListenAndServe:", err)
 	}
 }
