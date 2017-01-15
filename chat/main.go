@@ -15,6 +15,7 @@ type templateHandler struct {
 	tmpl     *template.Template
 }
 
+// ServeHTTP allows templateHandler to be used as http.Handler
 func (t *templateHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	t.once.Do(func() {
 		t.tmpl = template.Must(template.ParseFiles(filepath.Join("templates", t.filename)))
@@ -25,6 +26,13 @@ func (t *templateHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 func main() {
 	// create default route handler that displays some static html
 	http.Handle("/", &templateHandler{filename: "chat.html"})
+
+	// room router
+	r := newRoom()
+	http.Handle("/room", r)
+	// running in new go routine to not block main thread
+	// which is used for running the http server
+	go r.run()
 
 	// Start Web Server
 	if err := http.ListenAndServe(":8080", nil); err != nil {
