@@ -11,6 +11,7 @@ type Tracer interface {
 	Trace(...interface{})
 }
 
+// tracer defines tracer type
 type tracer struct {
 	out io.Writer
 }

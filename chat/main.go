@@ -45,6 +45,7 @@ func main() {
 	// which is used for running the http server
 	go r.run()
 
+	// prepending : before port
 	addr := fmt.Sprintf(":%s", *port)
 	// Start Web Server
 	log.Println("Starting Web Server on port:", *port)

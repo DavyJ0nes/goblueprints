@@ -5,6 +5,7 @@ import (
 	"testing"
 )
 
+// TestNew checks that New() can create new Tracer object
 func TestNew(t *testing.T) {
 	var buf bytes.Buffer
 	tracer := New(&buf)
@@ -18,6 +19,7 @@ func TestNew(t *testing.T) {
 	}
 }
 
+// TestOff Checks that a blank or nilTracer can be created
 func TestOff(t *testing.T) {
 	var silentTracer Tracer = Off()
 	silentTracer.Trace("something")
