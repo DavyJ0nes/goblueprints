@@ -21,6 +21,10 @@ func TestNew(t *testing.T) {
 
 // TestOff Checks that a blank or nilTracer can be created
 func TestOff(t *testing.T) {
+	var buf bytes.Buffer
 	var silentTracer Tracer = Off()
 	silentTracer.Trace("something")
+	if buf.String() != "" {
+		t.Errorf("Trace Error. Got: %s | Expected: ''", buf.String())
+	}
 }
